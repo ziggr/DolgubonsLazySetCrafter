@@ -1,6 +1,6 @@
 DolgubonSetCrafter = DolgubonSetCrafter or {}
 
-DolgubonSetCrafter.lang = "en"
+DolgubonSetCrafter.lang = "jp"
 
 DolgubonSetCrafter.localizedStrings = {}
 

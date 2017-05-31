@@ -105,12 +105,9 @@ EVENT_MANAGER:RegisterForEvent(DolgubonSetCrafter.name, EVENT_ADD_ON_LOADED, Dol
 --EVENT_MANAGER:RegisterForEvent(DolgubonSetCrafter.name, EVENT_CRAFT_COMPLETED , d)
 
 
-SLASH_COMMANDS["/dolgubonlazysetcrafter"] = slashcommand
 SLASH_COMMANDS["/dlsc"] = slashcommand
 SLASH_COMMANDS["/dsc"] = slashcommand
 SLASH_COMMANDS["/setcrafter"] = slashcommand
-SLASH_COMMANDS["/dolgubonset"] = slashcommand
-SLASH_COMMANDS["/dolgubonsetcrafter"] = slashcommand
 SLASH_COMMANDS["/setcrafterdebugmode"] =
 function() 
 	DolgubonSetCrafter.savedVars.debug = not DolgubonSetCrafter.savedVars.debug 

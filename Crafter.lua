@@ -131,6 +131,7 @@ local function addPatternToQueue(patternButton,i)
 	requestTable["Pattern"] = patternButton.tooltip
 	local pattern, station  = 0, 0
 	local trait = 0
+	d(i)
 	if i<9 then
 		for i = 1, 3 do 
 
@@ -145,6 +146,11 @@ local function addPatternToQueue(patternButton,i)
 		end
 		requestTable["Trait"] = DolgubonSetCrafter.ComboBox.Armour.selected[2]
 		trait = DolgubonSetCrafter.ComboBox.Armour.selected[1]
+	elseif i== 21 then
+		requestTable["Weight"] = " "
+		requestTable["Trait"] = DolgubonSetCrafter.ComboBox.Armour.selected[2]
+		pattern, station = getPatternIndex(patternButton)
+		trait = DolgubonSetCrafter.ComboBox.Armour.selected[1]	
 	else
 		requestTable["Weight"] = ""
 		requestTable["Trait"] = DolgubonSetCrafter.ComboBox.Weapon.selected[2]
