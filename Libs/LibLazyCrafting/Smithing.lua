@@ -330,6 +330,9 @@ local function LLC_CraftSmithingItem(self, patternIndex, materialIndex, material
 	})
 
 	sortCraftQueue()
+	if not IsPerformingCraftProcess() and GetCraftingInteractionType()~=0 then  
+		LibLazyCrafting.craftInteractionTables[GetCraftingInteractionType()]["function"](GetCraftingInteractionType()) 
+	end
 end
 
 local function LLC_CraftSmithingItemByLevel(self, patternIndex, isCP , level, styleIndex, traitIndex, useUniversalStyleItem, stationOverride, setIndex, quality, autocraft, reference)

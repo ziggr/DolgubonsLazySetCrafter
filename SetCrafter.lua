@@ -14,6 +14,7 @@ DolgubonSetCrafter.default = {
 	["queue"] = {},
 	["xPos"] = 0,
 	["yPos"] = 0,
+	["counter"] = 0,
 }
 DolgubonSetCrafter.defaultCharacter = 
 {
