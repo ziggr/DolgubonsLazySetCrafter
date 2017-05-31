@@ -304,6 +304,14 @@ LibLazyCrafting.functionTable.craftItem = LLC_CraftItem
 LibLazyCrafting.functionTable.CraftAllItems = LLC_CraftAllItems
 LibLazyCrafting.functionTable.findItemByReference =  LLC_FindItemByReference
 
+local function LLC_GetMatRequirements(self, reference)
+	local requests = LLC_FindItemByReference(self, reference)
+	for i = 1, #requests do
+		LibLazyCrafting.craftInteractionTables[requests[i].station]["materialRequirements"](requests[i])
+	end
+
+end
+
 function LibLazyCrafting:Init()
 
 	-- Call this to register the addon with the library.
