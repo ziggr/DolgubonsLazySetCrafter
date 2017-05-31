@@ -131,7 +131,7 @@ local function addPatternToQueue(patternButton,i)
 	requestTable["Pattern"] = patternButton.tooltip
 	local pattern, station  = 0, 0
 	local trait = 0
-	d(i)
+
 	if i<9 then
 		for i = 1, 3 do 
 
