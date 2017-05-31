@@ -38,8 +38,8 @@ local bretonFlavour = GetItemLinkFlavorText(GetSmithingStyleItemLink(2 , 0))
 local FlavourText = GetItemLinkFlavorText(GetSmithingStyleItemLink(3 , 0)) -- actually redguard
 
 local excludedStyles =
-{ -- Unique(10) Maormer (32), Reach Winter (37) Tsaesci(38), Redoran(48), Hlaalu (49), Telvanni(51), Worm Cult(55), others are unused styles
-	10, 19, 32, 37, 38, 48, 49, 51, 55
+{ -- Unique(10) Bandit(18) Maormer (32), Reach Winter (37) Tsaesci(38), Redoran(48), Hlaalu (49), Telvanni(51), Worm Cult(55), others are unused styles
+	10, 18, 32, 37, 38, 48, 49, 51, 55
 }
 
 local function isStyleExcluded(index)
@@ -57,7 +57,9 @@ end
 local styles = {}
 for i = 1, GetNumSmithingStyleItems() do
 	if GetString("SI_ITEMSTYLE", i)~="" then
-		if not isStyleExcluded(i) then	
+		d(GetString("SI_ITEMSTYLE", i)..i)
+		if not isStyleExcluded(i) then
+			
 			styles[#styles + 1] = {i+1 ,GetString("SI_ITEMSTYLE", i),}
 		end
 	end

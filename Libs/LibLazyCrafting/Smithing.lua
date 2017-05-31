@@ -202,7 +202,7 @@ local function canCraftItemHere(station, setIndex)
 	
 	if not setIndex then setIndex = 0 end
 	if GetCraftingInteractionType()==station then
-		if GetCurrentSetInteractionIndex()==setIndex or setIndex==0 then
+		if GetCurrentSetInteractionIndex()==setIndex or setIndex==1 then
 
 			return true
 		end
@@ -421,8 +421,7 @@ local function LLC_SmithingCraftInteraction( station)
 		}
 		local setPatternOffset = {14, 15,[6]=6}
 		if earliest.setIndex~=1 then
-			parameters[1] = parameters[1] + setPatternOffset[station]
-			
+			parameters[1] = parameters[1] + setPatternOffset[station]	
 		end
 			dbug("CALL:ZOCraftSmithing")
 			CraftSmithingItem(unpack(parameters))

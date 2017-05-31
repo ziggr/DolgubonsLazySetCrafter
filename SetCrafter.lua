@@ -77,6 +77,7 @@ function DolgubonSetCrafter:Initialize()
 			d(k.." was not loaded")
 		end
 	end
+	DolgubonSetCrafter.initializeFeedbackWindow()
 end
 
 local function closeWindow (optionalOverride)

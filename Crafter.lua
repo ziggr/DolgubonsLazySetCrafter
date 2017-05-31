@@ -159,7 +159,7 @@ local function addPatternToQueue(patternButton,i)
 	end
 
 	requestTable["Level"] = DolgubonSetCrafterWindowInputBox:GetText()
-	if requestTable["Level"]=="" then requestTable["Level"]=nil out("Please select a level") return end
+	if requestTable["Level"]=="" then requestTable["Level"]=nil out(DolgubonSetCrafterWindowInputBox.selectPrompt) return end
 	for k, combobox in pairs(DolgubonSetCrafter.ComboBox) do
 		if combobox.invalidSelection(requestTable["Weight"]) then
 			out(combobox.selectPrompt)
@@ -227,6 +227,7 @@ function DolgubonSetCrafter.removeFromScroll(reference)
 	LazyCrafter:cancelItemByReference(reference)
 	table.sort(queue, function(a,b) if a~=nil and b~=nil then return a["Style"]>b["Style"] else return b==nil end end)
 	DolgubonSetCrafter.updateList()
+	
 end
 
 local function LLCCraftCompleteHandler(event, station, resultTable)

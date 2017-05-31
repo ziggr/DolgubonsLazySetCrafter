@@ -231,6 +231,7 @@ function DolgubonSetCrafter.setupLevelSelector()
 	createToggle( DolgubonSetCrafterWindowInputToggleChampion , [[esoui\art\treeicons\achievements_indexicon_champion_up.dds]] , [[esoui\art\treeicons\achievements_indexicon_champion_down.dds]], false)
 	DolgubonSetCrafterWindowInputToggleChampion.onToggleOff =function() DolgubonSetCrafterWindowInputCPLabel:SetHidden(false) end
 	DolgubonSetCrafterWindowInputToggleChampion.onToggleOn =function() DolgubonSetCrafterWindowInputCPLabel:SetHidden(true) end
+	DolgubonSetCrafterWindowInputBox.selectPrompt = zo_strformat(langStrings.UIStrings.selectPrompt,langStrings.UIStrings.level)
 	debugSelections[#debugSelections+1] = function() DolgubonSetCrafterWindowInputBox:SetText("10") end
 end
 
@@ -349,7 +350,13 @@ function DolgubonSetCrafter.initializeFunctions.setupUI()
 end
 
 
-updateList = function () DolgubonSetCrafter.manager:RefreshData() end
+updateList = function () DolgubonSetCrafter.manager:RefreshData()
+	if #queue == 0 then 
+		CraftingQueueScrollLabel:SetText(DolgubonSetCrafter.localizedStrings.UIStrings.queueHeader)
+	else
+		CraftingQueueScrollLabel:SetText(DolgubonSetCrafter.localizedStrings.UIStrings.queueHeader.." - "..#queue)
+	end
+ end
 DolgubonSetCrafter.updateList = updateList
 
 
