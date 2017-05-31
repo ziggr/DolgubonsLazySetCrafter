@@ -1,4 +1,4 @@
--- Thanks to @HappyElephant for translations!
+-- Thanks to @HappyElephant for inital translations!
 
 DolgubonSetCrafter = DolgubonSetCrafter or {}
 

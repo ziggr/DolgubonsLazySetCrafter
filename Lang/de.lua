@@ -1,3 +1,5 @@
+-- Thanks to @xpleader and @PaigeEvenstar for the initial translations!
+
 DolgubonSetCrafter = DolgubonSetCrafter or {}
 
 DolgubonSetCrafter.lang = "de"

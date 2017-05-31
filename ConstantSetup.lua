@@ -57,7 +57,6 @@ end
 local styles = {}
 for i = 1, GetNumSmithingStyleItems() do
 	if GetString("SI_ITEMSTYLE", i)~="" then
-		d(GetString("SI_ITEMSTYLE", i)..i)
 		if not isStyleExcluded(i) then
 			
 			styles[#styles + 1] = {i+1 ,GetString("SI_ITEMSTYLE", i),}
