@@ -256,7 +256,25 @@
 				
 			</Controls>
 		</Button>
-	
+		<Button name="MaterialRequirementTemplate" mouseEnabled="true" virtual="true" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="CENTER">
+			
+			<Dimensions x="100" y="40" />
+			
+			<Controls>
+				<Label name="$(parent)Link" font="ZoFontGame" verticalAlignment="CENTER" mouseEnabled="true" >
+					<Dimensions x="250" y="30" />
+					<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="50" offsetY="0" />
+				</Label>
+				<Label name="$(parent)Required" font="ZoFontGame" verticalAlignment="CENTER" >
+					<Dimensions x="250" y="30" />
+					<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="50" offsetY="0" />
+				</Label>
+				<Label name="$(parent)Current" font="ZoFontGame" verticalAlignment="CENTER" >
+					<Dimensions x="250" y="30" />
+					<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="50" offsetY="0" />
+				</Label>
+			</Controls>
+		</Button>
 
 	</Controls>
 </GuiXml>

@@ -18,7 +18,7 @@ local function dbug(...)
 	DolgubonDebugRunningDebugString(...)
 end
 local libLoaded
-local LIB_NAME, VERSION = "LibLazyCrafting", 0.2
+local LIB_NAME, VERSION = "LibLazyCrafting", 0.3
 local LibLazyCrafting, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibLazyCrafting then return end
 
@@ -196,7 +196,7 @@ LibLazyCrafting.sortCraftQueue = sortCraftQueue
 
 local abc = 1
 -- Finds the highest priority request.
-local function findEarliestRequest(station)
+function findEarliestRequest(station)
 	local earliest = {["timestamp"] = GetTimeStamp() + 100000} -- should be later than anything else, as it's 'in the future'
 	local addonName = nil
 	local position = 0
@@ -223,6 +223,7 @@ local function findEarliestRequest(station)
 
 	end
 	if addonName then
+
 		return earliest, addonName , position
 	else
 		return nil, nil , 0

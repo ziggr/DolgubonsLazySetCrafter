@@ -404,6 +404,7 @@ local currentCraftAttempt =
 local function LLC_SmithingCraftInteraction( station)
 	dbug("EVENT:CraftIntBegin")
 	--abc = abc + 1 if abc>50 then d("raft")return end
+
 	local earliest, addon , position = LibLazyCrafting.findEarliestRequest(station)
 	if earliest  and not IsPerformingCraftProcess() then
 
@@ -419,7 +420,7 @@ local function LLC_SmithingCraftInteraction( station)
 			LINK_STYLE_DEFAULT,
 		}
 		local setPatternOffset = {14, 15,[6]=6}
-		if earliest.setIndex~=0 then
+		if earliest.setIndex~=1 then
 			parameters[1] = parameters[1] + setPatternOffset[station]
 			
 		end
@@ -432,6 +433,7 @@ local function LLC_SmithingCraftInteraction( station)
 			currentCraftAttempt.slot = FindFirstEmptySlotInBag(BAG_BACKPACK)
 			currentCraftAttempt.timestamp = GetTimeStamp()
 			table.remove(parameters,6 )
+
 			currentCraftAttempt.link = GetSmithingPatternResultLink(unpack(parameters))
 
 		elseif earliest.type =="improvement" then
