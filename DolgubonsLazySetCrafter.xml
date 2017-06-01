@@ -90,6 +90,9 @@
 						<Label name="$(parent)Label" height="25" Alpha="1" color="FFFFFF" font="ZoFontGameLargeBold" verticalAlignment="TOP" horizontalAlignment="CENTER" text="Crafting Requests">
 							<Anchor point="TOP" relativeTo="$(parent)Backdrop" relativePoint="TOP" offsetX="0" offsetY="10" />
 						</Label>
+						<Label name="$(parent)Counter" height="25" Alpha="1" color="FFFFFF" font="ZoFontGameLargeBold" verticalAlignment="TOP" horizontalAlignment="CENTER" text="">
+							<Anchor point="LEFT" relativeTo="$(parent)Label" relativePoint="RIGHT" offsetX="0" offsetY="" />
+						</Label>
 						<Control name="$(parent)List" inherits="ZO_ScrollList">
 							<Anchor point="BOTTOM" relativeTo="$(parent)" offsetY="-10" offsetX="10" relativePoint="BOTTOM"/>
 							<Dimensions x="750" y="200" />
@@ -205,20 +208,32 @@
 				</Label>
 			</Controls>
 		</Button>
-		<Label name="QueueRowLabelTemplate" font="ZoFontGame" verticalAlignment="CENTER" virtual="true">
+		<Label name="QueueRowLabelTemplate" font="ZoFontGame" verticalAlignment="CENTER" virtual="true" mouseEnabled="true">
 			<OnInitialized>
 				local original = self.SetColor
 				self.ApplyColour = function(self, isKnown)
 					if isKnown then
 						original(self,0.4627451300621,0.73725491762161,0.76470595598221)
+					elseif isKnown==nil then
 					else
 						original(self,1,0.75,0.75,0.75)
 					end
+					self.isKnown = isKnown
 					--d(self:GetParent().data[1].Pattern)
 				end
 				
 				self.SetColor = function(self,...)  end
+				self.tooltip = DolgubonSetCrafter.localizedStrings.UIStrings.notEnoughKnowledge
 			</OnInitialized>
+			<OnMouseEnter>
+				if self.isKnown == false then
+					InitializeTooltip(InformationTooltip, self, BOTTOM, 0, -5)
+					SetTooltipText(InformationTooltip, self.tooltip)
+				end
+			</OnMouseEnter>
+			<OnMouseExit>
+				ClearTooltip(InformationTooltip)
+			</OnMouseExit>
 		</Label>
 		
 		<Button name="CraftingRequestTemplate" virtual="true" mouseEnabled="true" >
@@ -265,7 +280,7 @@
 					<Anchor point="LEFT" relativeTo="$(parent)Trait" offsetX="110" />
 				</Label>
 				<Label name="$(parent)Quality" inherits="QueueRowLabelTemplate">
-					<Dimensions x="250" y="48" />
+					<Dimensions x="90" y="48" />
 					<Anchor point="LEFT" relativeTo="$(parent)Set" offsetX="140" />
 				</Label>
 				

@@ -19,9 +19,7 @@ local LazyCrafter
 local LibLazyCrafting = LibStub:GetLibrary("LibLazyCrafting")
 local out = DolgubonSetCrafter.out
 
-local function findPreviouslyCraftedItem()
-
-end
+local validityFunctions 
 
 local shortVersions =
 {
@@ -35,6 +33,9 @@ local shortVersions =
 	{"Pacte de Cœurébène","Cœurébène"},
 
 }
+
+----------------------------------------------------
+-- HELPER FUNCTIONS
 
 local function StripColorAndWhitespace(text)
 
@@ -60,7 +61,7 @@ local function shortenNames(requestTable)
 	end
 end
 
-local function getNumTraitsKnown(station, pattern, trait)
+local function getNumTraitsKnown(station, pattern, trait) -- and if the trait is known
 	local count = 0
 	local traitKnown =false
 	for i =1 ,9 do 
@@ -69,16 +70,16 @@ local function getNumTraitsKnown(station, pattern, trait)
 		if known then
 			count = count + 1
 		end
-		d(index)
+		
 		if index == trait then
 			_,_, traitKnown = GetSmithingResearchLineTraitInfo(station, pattern, i)
-			d(traitKnown)
+			
 		end
 	end
 	return count, traitKnown
 end
 
-local function isTraitKnown(station, pattern, trait, setIndex)
+local function isTraitKnown(station, pattern, trait, setIndex) -- more of a router than anything. Calls getNumTraitsKnown to do the work
 	
 	trait = trait - 1
 	local known, number
@@ -93,6 +94,17 @@ local function isTraitKnown(station, pattern, trait, setIndex)
 	end
 	if trait == 0 then known = true end
 	return known, number>= GetSetIndexes()[setIndex][3]
+end
+
+-- uses the info in validityFunctions to recheck and see if attributes are an impediment to crafting.
+local function applyValidityFunctions(requestTable) 
+	for k, v in pairs(validityFunctions) do
+		local params = {}
+		for i = 2, #v  do
+			params[#params + 1] = requestTable["CraftRequestTable"][v[i]]
+		end
+		requestTable[k][3] = v[1](unpack(params) )
+	end
 end
 
 -- Finds the material index based on the level
@@ -135,7 +147,6 @@ local function getPatternIndex(patternButton,weight)
 			
 		end
 	else
-
 		-- It is armour
 		if weight == 1 then
 			-- It is heavy armour
@@ -170,7 +181,7 @@ local function addPatternToQueue(patternButton,i)
 			if DolgubonSetCrafter.armourTypes[i].toggleValue then
 
 				
-				requestTable["Weight"] = {1,DolgubonSetCrafter.armourTypes[i].tooltip, true}
+				requestTable["Weight"] = {1,DolgubonSetCrafter.armourTypes[i].tooltip}
 
 				pattern, station = getPatternIndex(patternButton,i)
 			end
@@ -189,8 +200,8 @@ local function addPatternToQueue(patternButton,i)
 		pattern, station = getPatternIndex(patternButton)
 		trait = DolgubonSetCrafter.ComboBox.Weapon.selected[1]
 	end
-	requestTable["Pattern"] = {pattern,patternButton.tooltip, true}
-	requestTable["Level"] = {tonumber(DolgubonSetCrafterWindowInputBox:GetText()),DolgubonSetCrafterWindowInputBox:GetText(), true}
+	requestTable["Pattern"] = {pattern,patternButton.tooltip}
+	requestTable["Level"] = {tonumber(DolgubonSetCrafterWindowInputBox:GetText()),DolgubonSetCrafterWindowInputBox:GetText()}
 	if requestTable["Level"][2]=="" then requestTable["Level"][1]=nil out(DolgubonSetCrafterWindowInputBox.selectPrompt) return end
 	for k, combobox in pairs(DolgubonSetCrafter.ComboBox) do
 		if combobox.invalidSelection(requestTable["Weight"]) and not DolgubonSetCrafter.savedVars.autofill then
@@ -202,14 +213,14 @@ local function addPatternToQueue(patternButton,i)
 	
 	local isCP = not DolgubonSetCrafterWindowInputToggleChampion.toggleValue
 	requestTable["Style"] 		= DolgubonSetCrafter.ComboBox.Style.selected
-	requestTable["Style"][3] 	= IsSmithingStyleKnown(requestTable["Style"][1])
+	
 	local styleIndex 			= DolgubonSetCrafter.ComboBox.Style.selected[1]
 	requestTable["Set"]			= DolgubonSetCrafter.ComboBox.Set.selected
-	requestTable["Trait"][3], requestTable["Set"][3]	= isTraitKnown(station, pattern, trait, requestTable["Set"][1] )
+	
 
 	local setIndex 				= DolgubonSetCrafter.ComboBox.Set.selected[1]
 	requestTable["Quality"]		= DolgubonSetCrafter.ComboBox.Quality.selected
-	requestTable["Quality"][3]	= true
+	
 	local quality 				= DolgubonSetCrafter.ComboBox.Quality.selected[1]
 	requestTable["Reference"]	= DolgubonSetCrafter.savedVars.counter
 	DolgubonSetCrafter.savedVars.counter = DolgubonSetCrafter.savedVars.counter + 1
@@ -225,6 +236,7 @@ local function addPatternToQueue(patternButton,i)
 			requestTable["Level"][2] = "CP"..requestTable["Level"][2]
 		end
 		requestTable["CraftRequestTable"] = CraftRequestTable
+		applyValidityFunctions(requestTable)
 		return requestTable
 	end
 end
@@ -290,8 +302,17 @@ function DolgubonSetCrafter.initializeFunctions.initializeCrafting()
 	DolgubonSetCrafter.LazyCrafter = LazyCrafter
 	for k, v in pairs(queue) do 
 		LazyCrafter:CraftSmithingItemByLevel(unpack(v["CraftRequestTable"]))
+		applyValidityFunctions(v)
 	end
 end
+
+validityFunctions = --stuff that's not here will automatically recieve a value of true.
+{
+	["Trait"] = {function(...) local a = isTraitKnown(...) return a end , 7, 1,5, 8},
+	["Set"] = {function(...)local _,a = isTraitKnown(...) return a end , 7,1,5,8},
+	["Style"] = {IsSmithingStyleKnown , 4},
+}
+
 
 
 --[[@Dolgubon: label: offsetX -10 -> offsetX -160, toggleCp: offsetX -100 -> offsetX -85, box: 

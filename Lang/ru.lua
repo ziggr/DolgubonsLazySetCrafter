@@ -20,6 +20,7 @@ DolgubonSetCrafter.localizedStrings.UIStrings.addToQueue          = "Добав�
 DolgubonSetCrafter.localizedStrings.UIStrings.queueHeader         = "Очередь создания"
 DolgubonSetCrafter.localizedStrings.UIStrings.clearQueue          = "Очистить очередь"
 DolgubonSetCrafter.localizedStrings.UIStrings.resetToDefault      = "Сбросить выбранное"
+DolgubonSetCrafter.localizedStrings.UIStrings.notEnoughKnowledge  = "You do not have enough knowledge for this attribute"
 
 
 

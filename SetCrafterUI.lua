@@ -292,7 +292,8 @@ function DolgubonScroll:SetupEntry(control, data)
 	end
 
 	button = control:GetNamedChild( "RemoveButton")
-	function button:onClickety () DolgubonSetCrafter.removeFromScroll(data[1].Reference) updateList() end
+
+	function button:onClickety ()DolgubonSetCrafter.removeFromScroll(data[1].Reference) updateList() end
 	--function control:onClicked () DolgubonsGuildBlacklistWindowInputBox:SetText(data.name) end
 	
 	ZO_SortFilterList.SetupRow(self, control, data)
@@ -380,9 +381,9 @@ end
 
 updateList = function () DolgubonSetCrafter.manager:RefreshData()
 	if #queue == 0 then 
-		CraftingQueueScrollLabel:SetText(DolgubonSetCrafter.localizedStrings.UIStrings.queueHeader)
+		CraftingQueueScrollCounter:SetText()
 	else
-		CraftingQueueScrollLabel:SetText(DolgubonSetCrafter.localizedStrings.UIStrings.queueHeader.." - "..#queue)
+		CraftingQueueScrollCounter:SetText(" - "..#queue)
 	end
  end
 DolgubonSetCrafter.updateList = updateList
