@@ -15,7 +15,7 @@ This is a work in progress.
 -- Initialize libraries
 
 local function dbug(...)
-	DolgubonDebugRunningDebugString(...)
+	--DolgubonDebugRunningDebugString(...)
 end
 local libLoaded
 local LIB_NAME, VERSION = "LibLazyCrafting", 1.1
