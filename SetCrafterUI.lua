@@ -9,7 +9,7 @@
 -- Most of these functions are meant to be called by the main file
 -- A good portion are setup functions, called by the initialization function
 -- 
-
+--local original = d local function d() original(pcall(function() error("There's a d() at this line!") end )) end
 DolgubonSetCrafter = DolgubonSetCrafter or {}
 DolgubonSetCrafter.initializeFunctions = DolgubonSetCrafter.initializeFunctions or {}
 
@@ -109,13 +109,19 @@ function DolgubonSetCrafter.setupPatternButtons()
 	local function setOtherArmourTypesToZero(index)
 		for i = 1, #DolgubonSetCrafter.armourTypes do
 			if index ~= i then
-				DolgubonSetCrafter.armourTypes[i]:toggleOff()
+				DolgubonSetCrafter.armourTypes[i]:toggleOff(true)
 			end
 		end
 	end
 
 	for i = 1, #DolgubonSetCrafter.armourTypes do
 		local button = DolgubonSetCrafter.armourTypes[i]
+		local original = button.toggleOff
+		function button:toggleOff(activate)
+			if activate then 
+				original(button)
+			end
+		end
 		function button:toggleOn()
 			self.toggleValue = true
 			self:SetNormalTexture(self.onTexture)
@@ -143,6 +149,7 @@ local out = DolgubonSetCrafter.out
 --Creates one dropdown box
 local function makeDropdownSelections(comboBoxContainer, tableInfo , text , x, y, comboBoxLocation, isArmourCombobox)
 	local comboBox = comboBoxContainer:GetChild(comboBoxLocation)
+	-- if location is 1 then get child number 2 and if location is 2 get child number 1
 	comboBoxContainer:GetChild((comboBoxLocation+2)%2+1):SetText(text..":")
 	if not comboBox.m_comboBox then 
 		comboBox.m_comboBox =comboBox.dropdown
@@ -293,7 +300,7 @@ function DolgubonScroll:SetupEntry(control, data)
 
 	button = control:GetNamedChild( "RemoveButton")
 
-	function button:onClickety ()DolgubonSetCrafter.removeFromScroll(data[1].Reference) updateList() end
+	function button:onClickety ()   DolgubonSetCrafter.removeFromScroll(data[1].Reference)  end
 	--function control:onClicked () DolgubonsGuildBlacklistWindowInputBox:SetText(data.name) end
 	
 	ZO_SortFilterList.SetupRow(self, control, data)
@@ -564,6 +571,9 @@ CP160 Twice Born Star Robe
 |H1:item:44241:308:50:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:10000:0|h|h
 |H1:item:43544:308:50:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:10000:0|h|h
 |H1:item:43545:308:50:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:10000:0|h|h
+
+
+<Label name="$(parent)Name" font="ZoFontGameShadow" wrapMode="ELLIPSIS" verticalAlignment="CENTER">
 ]]
 
 -- Check out ZO_StatsDropdownRow

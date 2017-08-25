@@ -70,10 +70,14 @@ function DolgubonSetCrafter:Initialize()
 	if DolgubonSetCrafter.savedVars.debug then
 		DolgubonSetCrafterWindow:SetHidden(false)
 	end
-	DolgubonSetCrafter.initializeFunctions.initializeSettingsMenu()
-	DolgubonSetCrafter.initializeFunctions.initializeCrafting()
-	DolgubonSetCrafter.initializeFunctions.setupUI()
 
+	--if pcall(DolgubonSetCrafter.initializeFunctions.initializeSettingsMenu) then else d("Dolgubon's Lazy Set Crafter: USettings not loaded") end
+	DolgubonSetCrafter.initializeFunctions.initializeSettingsMenu()
+	--if pcall(DolgubonSetCrafter.initializeFunctions.initializeCrafting) then else d("Dolgubon's Lazy Set Crafter: UCrafting not loaded") end
+	DolgubonSetCrafter.initializeFunctions.initializeCrafting()
+	--if pcall(DolgubonSetCrafter.initializeFunctions.setupUI) then else d("Dolgubon's Lazy Set Crafter: UI not loaded") end
+	DolgubonSetCrafter.initializeFunctions.setupUI()
+	
 	DolgubonSetCrafter.initializeFeedbackWindow()
 end
 

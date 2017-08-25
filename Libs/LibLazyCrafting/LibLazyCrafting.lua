@@ -18,7 +18,7 @@ local function dbug(...)
 	DolgubonDebugRunningDebugString(...)
 end
 local libLoaded
-local LIB_NAME, VERSION = "LibLazyCrafting", 0.3
+local LIB_NAME, VERSION = "LibLazyCrafting", 1.1
 local LibLazyCrafting, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibLazyCrafting then return end
 
@@ -179,6 +179,95 @@ end
 
 
 LibLazyCrafting.functionTable.findItemLocationById = findItemLocationById
+	-- Returns a table of [slot_index] --> stack count for each bag slot that holds
+-- the requested item.
+--
+-- ALSO includes the first empty slot in bag, since there is still a chance
+-- that this crafting attempt might start a new stack.
+--
+function LibLazyCrafting.findSlotsContaining(itemLink, alsoIncludeFirstEmpty)
+	local wantItemName = GetItemLinkName(itemLink)
+	local r = {}
+	local bagId = BAG_BACKPACK
+	local maxSlotId = GetBagSize(bagId)
+	for slotIndex = 0, maxSlotId do
+		local slotLink = GetItemLink(bagId, slotIndex, LINK_STYLE_DEFAULT)
+		if GetItemLinkName(slotLink) == wantItemName then
+			r[slotIndex] = GetSlotStackSize(bagId, slotIndex)
+		end
+	end
+	if alsoIncludeFirstEmpty then
+		local emptySlotIndex = FindFirstEmptySlotInBag(bagId)
+		r[emptySlotIndex] = 0
+	end
+	return r
+end
+-- Return the first slot index of a stack of items that grew.
+-- Return nil if no stacks grew.
+--
+-- prevSlotsContaining and newSlotsContaining are expected to be
+-- results from findSlotsContaining().
+function LibLazyCrafting.findIncreasedSlotIndex(prevSlotsContaining, newSlotsContaining)
+	for slotIndex, prevStackSize in pairs(prevSlotsContaining) do
+		local new = newSlotsContaining[slotIndex]
+		if new and prevStackSize < new then
+			return slotIndex
+		end
+	end
+	return nil
+end
+function LibLazyCrafting.tableShallowCopy(t)
+	local a = {}
+	for k, v in pairs(t) do
+		a[k] = v
+	end
+	return a
+end
+-- clear a table in-place. Allows functions to clear out tables passed as a parameter.
+local function tableClear(t)
+	for k,_ in ipairs(t) do
+		t[k] = nil
+	end
+end
+-- Common code called by Alchemy and Provisioning crafting complete handlers.
+function LibLazyCrafting.stackableCraftingComplete(event, station, lastCheck, craftingType, currentCraftAttempt)
+	dbug("EVENT:CraftComplete")
+	if not currentCraftAttempt.addon then return end
+	local newSlots = LibLazyCrafting.findSlotsContaining(currentCraftAttempt.link, true)
+	local grewSlotIndex = LibLazyCrafting.findIncreasedSlotIndex(currentCraftAttempt.prevSlots, newSlots)
+	if grewSlotIndex then
+		dbug("RESULT:StackableMade")
+		if currentCraftAttempt["timesToMake"] < 2 then
+			dbug("ACTION:RemoveQueueItem")
+			craftingQueue[currentCraftAttempt.addon][craftingType][currentCraftAttempt.position] = nil
+			LibLazyCrafting.sortCraftQueue()
+			local resultTable =
+			{
+				["bag"] = BAG_BACKPACK,
+				["slot"] = grewSlotIndex,
+				['link'] = currentCraftAttempt.link,
+				['uniqueId'] = GetItemUniqueId(BAG_BACKPACK, currentCraftAttempt.slot),
+				["quantity"] = 1,
+				["reference"] = currentCraftAttempt.reference,
+			}
+			currentCraftAttempt.callback(LLC_CRAFT_SUCCESS, craftingType, resultTable)
+			tableClear(currentCraftAttempt)
+		else
+			-- Loop to craft multiple copies
+			local earliest = craftingQueue[currentCraftAttempt.addon][craftingType][currentCraftAttempt.position]
+			earliest.timesToMake = earliest.timesToMake - 1
+			currentCraftAttempt.timesToMake = earliest.timesToMake
+			if GetCraftingInteractionType()==0 then zo_callLater(function() LibLazyCrafting.stackableCraftingComplete(event, station, true, craftingType, currentCraftAttempt) end,100) end
+		end
+	elseif lastCheck then
+		-- give up on finding it.
+		tableClear(currentCraftAttempt)
+	else
+		-- further search
+		-- search again later
+		if GetCraftingInteractionType()==0 then zo_callLater(function() LibLazyCrafting.stackableCraftingComplete(event, station, true, craftingType, currentCraftAttempt) end,100) end
+	end
+end
 
 
 -------------------------------------
@@ -340,6 +429,10 @@ function LibLazyCrafting:Init()
 
 		LLCAddonInteractionTable.autocraft = autocraft
 
+		-- Give add-on authors a way to check for required version beyond
+		-- "I hope LibStub returns what I asked for!"
+		LLCAddonInteractionTable["version"] = VERSION
+
 		return LLCAddonInteractionTable
 	end
 
@@ -450,14 +543,16 @@ end
 -- which bypasses the event Manager, so that it is called first.
 
 local function CraftComplete(event, station)
+	--d("Event:completion")
 	local LLCResult = nil
 	for k,v in pairs(LibLazyCrafting.craftInteractionTables) do
 		if v["check"](station) then
 			if GetCraftingInteractionType()==0 then
+				--d("Calling exit complete, why???")
 				endInteraction(EVENT_END_CRAFTING_STATION_INTERACT, station)
 				zo_callLater(function() v["complete"](station) end, timetest)
 			else
-
+				--d("calling complete")
 				v["complete"](station)
 				v["function"](station) 
 			end
