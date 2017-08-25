@@ -449,7 +449,7 @@ local function LLC_SmithingCraftInteraction( station)
 			table.remove(parameters,6 )
 
 			currentCraftAttempt.link = GetSmithingPatternResultLink(unpack(parameters))
-			d("Making reference #"..tostring(currentCraftAttempt.reference).." link: "..currentCraftAttempt.link)
+			--d("Making reference #"..tostring(currentCraftAttempt.reference).." link: "..currentCraftAttempt.link)
 		elseif earliest.type =="improvement" then
 			local parameters = {}
 			local skillIndex = station + 1 - math.floor(station/6)

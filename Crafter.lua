@@ -283,7 +283,7 @@ function DolgubonSetCrafter.removeFromScroll(reference)
 		removalFunction = reference.onClickety
 		reference = reference.Reference
 	end
-	d(reference)
+	--d(reference)
 
 	for k, v in pairs(queue) do
 		if v.Reference == reference then
@@ -305,6 +305,7 @@ local function LLCCraftCompleteHandler(event, station, resultTable)
 	SetCrafterResults[#SetCrafterResults + 1] = {["event"] = event, ["reference"] = resultTable["reference"]}
 	if event ~=LLC_CRAFT_SUCCESS then return end
 	DolgubonSetCrafter.removeFromScroll(resultTable["reference"])
+
 end
 
 function DolgubonSetCrafter.clearQueue()
