@@ -252,6 +252,7 @@ function DolgubonSetCrafter.setupLevelSelector()
 	DolgubonSetCrafterWindowInputToggleChampion.onToggleOn =function() DolgubonSetCrafterWindowInputCPLabel:SetHidden(true) end
 	DolgubonSetCrafterWindowInputBox.selectPrompt = zo_strformat(langStrings.UIStrings.selectPrompt,langStrings.UIStrings.level)
 	debugSelections[#debugSelections+1] = function() DolgubonSetCrafterWindowInputBox:SetText("10") end
+	debugSelections[#debugSelections+1] = DolgubonSetCrafterWindowInputToggleChampion.ToggleOff
 end
 
 

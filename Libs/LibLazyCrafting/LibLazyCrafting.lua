@@ -18,7 +18,7 @@ local function dbug(...)
 	--DolgubonDebugRunningDebugString(...)
 end
 local libLoaded
-local LIB_NAME, VERSION = "LibLazyCrafting", 1.1
+local LIB_NAME, VERSION = "LibLazyCrafting", 1.2
 local LibLazyCrafting, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibLazyCrafting then return end
 
@@ -232,7 +232,7 @@ end
 -- Common code called by Alchemy and Provisioning crafting complete handlers.
 function LibLazyCrafting.stackableCraftingComplete(event, station, lastCheck, craftingType, currentCraftAttempt)
 	dbug("EVENT:CraftComplete")
-	if not currentCraftAttempt.addon then return end
+	if not (currentCraftAttempt and currentCraftAttempt.addon) then return end
 	local newSlots = LibLazyCrafting.findSlotsContaining(currentCraftAttempt.link, true)
 	local grewSlotIndex = LibLazyCrafting.findIncreasedSlotIndex(currentCraftAttempt.prevSlots, newSlots)
 	if grewSlotIndex then

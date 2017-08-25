@@ -245,6 +245,11 @@ local function addPatternToQueue(patternButton,i)
 		end
 		requestTable["CraftRequestTable"] = CraftRequestTable
 		applyValidityFunctions(requestTable)
+		d("Check to see if found")
+		if #LazyCrafter:findItemByReference(requestTable["Reference"]) == 0 then
+			d("Was not added")
+			zo_calLater(function() d("Attempt to add again")addPatternToQueue(patternButton, i) end, 1000)
+		end
 		return requestTable
 	end
 end
@@ -283,7 +288,7 @@ function DolgubonSetCrafter.removeFromScroll(reference)
 		removalFunction = reference.onClickety
 		reference = reference.Reference
 	end
-	--d(reference)
+	if GetDisplayName() =="@Dolgubon" then  d(reference) end
 
 	for k, v in pairs(queue) do
 		if v.Reference == reference then
