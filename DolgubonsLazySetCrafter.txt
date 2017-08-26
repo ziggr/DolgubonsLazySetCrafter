@@ -14,7 +14,9 @@
 
 Libs\LibStub\LibStub\LibStub.lua
 Libs\LibLazyCrafting\LibLazyCrafting.lua
+Libs\LibLazyCrafting\Alchemy.lua
 Libs\LibLazyCrafting\Enchanting.lua
+Libs\LibLazyCrafting\Provisioning.lua
 Libs\LibLazyCrafting\Smithing.lua
 Libs\LibCustomTitle\LibCustomTitles.lua
 libs\LibAddonMenu-2.0\LibAddonMenu-2.0.lua
